@@ -12,7 +12,7 @@
                                 <div class="card-body d-flex flex-column justify-content-center"> 
                                     <div class="formHeader  d-flex justify-content-center">
                                         <div class="underlineHover">
-                                            <img src="img/logo3.png" style="width:200px;height:200px;border-radius:50%;"  class=" shadow-lg" alt="ClickNClean">
+                                            <img src="/img/logo3.png" style="width:200px;height:200px;border-radius:50%;"  class=" shadow-lg" alt="ClickNClean">
                                         </div>
                                     </div>
                                         <div class="fadeIn first">
@@ -52,6 +52,8 @@
     import { reactive, ref } from 'vue';
     import { useRouter } from 'vue-router';
     import axios from 'axios';
+    import router from '../router';
+
 
     export default{
          setup(){
@@ -68,7 +70,7 @@
             const store = async () => {
                 console.log(data)
                 axios.post(
-                    'http://127.0.0.1:8001/api/auth/register',
+                    'https://apilaundry.arashiyunus.com/api/auth/register',
                     data, 
                 )
                 .then((res)=>{

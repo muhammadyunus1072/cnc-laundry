@@ -6,6 +6,25 @@ $(document).ready(function(){
     var jenis_kelamin = $('#jenis_kelamin');
     var tlp = $('#tlp');
     var jenkel = "";
+    $(".datepickert").datepicker({
+        // appendText : 'yyyy-mm-dd'
+        dateFormat: "yy-mm-dd",
+        showOptions: { direction: "up" }
+    })
+    $("#tablePen").DataTable();
+    onprint = function(){
+        $("#navbar").show();
+        $("#appCon").show();
+        $("#content-im").show();
+        $("#printPage").hide();
+
+        // $("#navbar").show();
+        $("#appTran").show();
+        $("#printPage").hide();
+        document.title = "CNC Laundry"
+        // self.qrClear();
+        // $('.datepicker').datepicker({});
+    }
     
     $(document).on('click', '#btnSaveUser', function(){
         if($("#jenis_kelamin").val() == 'Laki - Laki'){

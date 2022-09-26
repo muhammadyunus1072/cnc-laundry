@@ -27,7 +27,7 @@
                                 <div id="titleR"  class="mt-5" style="width:100%; height :355px;" >
                                     
                                 </div>
-                                <img class="card-img-top mx-auto" src="img/logo2.png" style="width:100px; height:100px;" alt="Card image cap">
+                                <img class="card-img-top mx-auto" src="/img/logo2.png" style="width:100px; height:100px;" alt="Card image cap">
                                 <div class="card-body " style="width:100%;" v-if="modal">
                                     <!-- <div class="form-group mt-4">                       -->
                                     <!-- <label for="idOutlet">Outlet</label> -->
@@ -138,7 +138,9 @@
                     </div>
                 </div>
                 <!-- <h1>@{{ searchOut }}</h1> -->
-                    <table class="table table-hover mt-5 table-lg table-responsive" id="tableTran">
+                <div class="table-responsive">
+
+                    <table class="table table-hover mt-5" id="tableTran">
                         <thead>
                             <tr>
                             <th>#</th>
@@ -174,6 +176,7 @@
                             </tr>         
                         </tbody>
                     </table>
+                </div>
             </div>
         </div>
     
@@ -252,9 +255,10 @@
                     <div id="titleR"  class="mt-5" style="width:100%; height :500px;" >
                         
                     </div>
-                    <img class="card-img-top mx-auto" src="img/logo2.png" style="width:30%;" alt="Card image cap">
+                    <img class="card-img-top mx-auto" src="/img/logo2.png" style="width:30%;" alt="Card image cap">
                     <div class="card-body position-relative" style="width:100%;">
                         <h4 class="card-title font-weight-bold text-center h3 text-primary">Bukti Transaksi</h4>     
+                        <h6 class="card-title text-center h6 text-secondary">{{ tglP }}</h6>     
                         <table class="mt-5 mx-auto">
                             <tr>
                                 <td>
@@ -340,6 +344,7 @@
 
 <script>
     import Navbar from '../Components/Navbar.vue'
+    import router from '../router';
 
     export default{
         components: {
@@ -376,7 +381,9 @@
                 TP : "",
                 PP : "",
                 Kodetran: "",
-                saved : 0
+                saved : 0,
+                tglP : "",
+                qrcodeg : ""
             }
         },
         methods: {
@@ -388,7 +395,7 @@
                 var self = this;
                 var status = a;
 
-                axios.post('http://localhost:8001/api/auth/ubahStatus/',{status: status, id : self.Kodetran},{
+                axios.post('https://apilaundry.arashiyunus.com/api/auth/ubahStatus/',{status: status, id : self.Kodetran},{
                     headers: {
                             'Authorization': `Bearer ${self.access_token}` 
                         }
@@ -409,8 +416,10 @@
             getAll: function() {
                 var self = this;
                 // self.qrcode('a')
+                self.qrcodeg = new QRCode(document.getElementById('qrcode'));
                 self.access_token = localStorage.getItem('access_token');
-                axios.get("http://localhost:8001/api/auth/transaksi",{
+                // self.qrcodeg.makeCode("CNC-2221IG6vkyT0Fk");
+                axios.get("https://apilaundry.arashiyunus.com/api/auth/transaksi",{
                     headers: {
                             'Authorization': `Bearer ${self.access_token}` 
                         }
@@ -429,7 +438,14 @@
                     var date = new Date();
 
                     self.kdinvoice = ran.concat("CNC-",date.getDate(),date.getHours(),self.Random(10,"c"))
-                })
+                }, { withCredentials: true })
+                .catch((e)=>{
+                    // console.log(e)
+                     router.push({
+                        name: 'index'
+                    })
+                    // validation.value = e.response.data
+                });
             },
             qty: function () {
                 var self = this;
@@ -500,7 +516,7 @@
             },
             searchingTran: function (a) {
                 var self = this;
-                axios.post('http://localhost:8001/api/auth/searchTran/',{param: a},{
+                axios.post('https://apilaundry.arashiyunus.com/api/auth/searchTran/',{param: a},{
                     headers: {
                             'Authorization': `Bearer ${self.access_token}` 
                         }
@@ -602,7 +618,7 @@
                 // alert($("#bataswaktu").val())
                 axios({
                     method : "post",
-                    url : "http://localhost:8001/api/auth/transaksi",
+                    url : "https://apilaundry.arashiyunus.com/api/auth/transaksi",
                     data: dataTran ,
                     headers: {
                             'Authorization': `Bearer ${self.access_token}` 
@@ -638,39 +654,37 @@
                             self.kdinvoice = ran.concat("CNC-",date.getDate(),date.getHours(),self.Random(10,"c"))
 
                             self.transaksi = res.list;
+                                
+                                self.KIP = res.print[0].kode_invoice
+                                self.OP = res.print[0].outlet.nama.concat(", ",res.print[0].outlet.alamat,".")
+                                self.HP = res.print[0].total
+                                self.TP = res.print[0].outlet.tlp
+                                self.tglP = res.print[0].tgl
+                                self.PP = res.petugas
+                                self.qrcodeg.makeCode(res.print[0].kode_invoice);
+                                document.title = "CNC Laundry Bukti Transaksi "+self.tglP
+
+                                // window.onbeforeprint = function(){
+                                    
+                                //     }
 
                             Swal.fire({
                                 title: 'Berhasil !',
                                 text: "Transaksi telah di tambahkan",
                                 type: 'success',
                                 showCancelButton: false,
-                                cancel: false,
-                                close: false,
+                                // cancel: false,
+                                // close: false,
                                 confirmButtonColor: '#3085d6',
                                 cancelButtonColor: '#d33',
                                 // cancelButtonText: 'Kembali',
                                 confirmButtonText: 'Lanjutkan !'
                             }).then((result) => {
-
-                                self.KIP = res.print[0].kode_invoice
-                                self.OP = res.print[0].outlet.nama.concat(", ",res.print[0].outlet.alamat,".")
-                                self.HP = res.print[0].total
-                                self.TP = res.print[0].outlet.tlp
-                                self.PP = res.petugas
-                                self.qrcode(res.print[0].kode_invoice);
                                 // var str = document.querySelector("input").value;
-                               
-                                $("#navbar").hide();
-                                $("#appTran").hide();
-                                $("#printPage").show();
-                                setTimeout(function(){
-                                    window.print()
-                                    $("#navbar").show();
-                                    $("#appTran").show();
-                                    $("#printPage").hide();
-                                    self.qrClear();
-                                    $('.datepicker').datepicker({});
-                                },1000)
+                                    setTimeout(function(){
+                                window.print()
+                                },2000)
+                                document.title = "CNC Laundry"
                             })
 
                         }else{
@@ -680,14 +694,33 @@
                     // }
                 })
             },
-            qrcode: function(a){
-                new QRCode(document.getElementById("qrcode"), a);
-            },
-            qrClear: function(){
-                new QRCode(document.getElementById("qrcode")).clear();          
-            }
+            // qrcode: function(a){
+            //     new QRCode(document.getElementById("qrcode"), a);
+            // },
+            // qrclear: function(){
+            //     new QRCode(document.getElementById("qrcode")).clear();          
+            // }
         },
         mounted(){
+            window.addEventListener('beforeprint', function(){
+                $("#navbar").hide();
+                $("#appTran").hide();
+                $("#printPage").show();
+
+            })
+            window.addEventListener('afterprint', function(){
+                
+                $("#navbar").show();
+                // $("#appCon").show();
+                // $("#content-im").show();
+                // $("#printPage").hide();
+
+                // $("#navbar").show();
+                $("#appTran").show();
+                $("#printPage").hide();
+                
+                self.qrcodeg.clear()  ;
+                })
             this.getAll()
         }
     }

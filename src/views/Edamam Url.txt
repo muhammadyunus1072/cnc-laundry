@@ -1,0 +1,11 @@
+Url get food id edamam = 'https://developer.edamam.com/food-database-api-docs'
+
+Url get nutrients of food by food Id = 'https://api.edamam.com/api/food-database/v2/nutrients?app_id=c69eecda&app_key=2bf7736426fd8049962a8c9daf1e60f4'
+
+
+Url get nutrient from like 1 cup coffee = curl -X GET --header "Accept: application/json" "https://api.edamam.com/api/nutrition-data?app_id=5142b005&app_key=429fbc5c81937734d42c34c0240d9903%09&nutrition-type=cooking&ingr=1%20glass%20coffee" documentation = https://developer.edamam.com/edamam-docs-nutrition-api
+
+https://api.edamam.com/api/food-database/v2/parser?app_id=c69eecda&app_key=2bf7736426fd8049962a8c9daf1e60f4&ingr=milk%20&nutrition-type=cooking
+
+Yang di pake = https://developer.edamam.com/food-database-api-docs
+yang lengkap = https://developer.edamam.com/edamam-docs-nutrition-api

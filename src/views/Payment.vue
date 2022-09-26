@@ -23,7 +23,7 @@
             </div>
             <div class="w-100 d-flex justify-content-center flex-column mt-3">
                 <div class="w-100 d-flex justify-content-center" v-if="!scanStatus">
-                    <img class="text-center w-40 h-25" src="img/logo2.png" alt="">
+                    <img class="text-center w-40 h-25" src="/img/logo2.png" alt="">
                 </div>
                 <div class="w-100 d-flex justify-content-center">
                     <div id="qrReader" class="w-50 border"></div>
@@ -43,7 +43,7 @@
             <div class="modal-dialog modal-lg" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <img src="img/logo.png" width="150" height="60" alt="">
+                        <img src="/img/logo.png" width="150" height="60" alt="">
                         <h4 class="card-title font-weight-bold text-center h1 text-primary" style="margin-left:15%;">Pembayaran</h4>   
                         <button type="button" class="btn btn-close btn-danger" data-bs-dismiss="modal"></button>
                     </div>
@@ -101,12 +101,12 @@
                             <tr class="">
                                 <td class="">
                                     <div class="w-auto d-flex align-content-stretch flex-wrap">
-                                        <div class="fw-semibold text-secondary">Tunai  </div>
+                                        <div class="fw-semibold text-secondary">Tunai </div>
                                     </div>
                                 </td>
                                 <td>
                                     <div class="w-auto d-flex align-content-stretch flex-wrap">
-                                        <div class="fw-semibold text-secondary">:  </div>
+                                        <div class="fw-semibold text-secondary"> :  </div>
                                     </div>
 
                                 </td>
@@ -164,7 +164,7 @@
                         <table class="mt-3 mx-auto">
                             <tr>
                                 <td>
-                                    <p class="fw-semibold text-secondary">Kode Invoice</p>
+                                    <p class="fw-semibold text-secondary">Kode Invoice </p>
 
                                 </td>
                                 <td>
@@ -295,7 +295,24 @@
                 print: false
             }
         },
-        mounted(){            
+        mounted(){        
+            window.addEventListener('beforeprint', function(){
+                $("#navbar").hide();
+                $("#appCon").hide();
+                $("#content-im").hide();
+                document.title = "CNC Laundry Bukti Pembayaran "+self.tgl_bayar
+                $("#printPage").show();
+            })    
+            window.addEventListener('afterprint', function(){
+                $("#navbar").show();
+                $("#appCon").show();
+                $("#content-im").show();
+                $("#printPage").hide();
+
+                // $("#navbar").show();
+                // $("#appTran").show();
+                // $("#printPage").hide();
+            })
             this.html5QrCode = new Html5Qrcode("qrReader");
 
         // var html5QrcodeScanner = new Html5QrcodeScanner(
@@ -345,14 +362,14 @@
             searchingKode: function (a) {
                 var self = this;
                 self.access_token = localStorage.getItem('access_token');
-                axios.post('http://localhost:8001/api/auth/searchingKode',{param : a},{headers: {
+                axios.post('https://apilaundry.arashiyunus.com/api/auth/searchingKode',{param : a},{headers: {
                             'Authorization': `Bearer ${self.access_token}` 
                         }
                     }
                 )
                 .then(function(response){
                     var res = response.data;
-                    // console.log(res)
+                    console.log(response)
                     if(res.status){
                         if(res.list[0].statusBayar == "dibayar"){
                             self.code = 2;
@@ -390,7 +407,7 @@
                 var self = this;
                 axios({
                     method : 'post',
-                    url : 'http://localhost:8001/api/auth/bayar',
+                    url : 'https://apilaundry.arashiyunus.com/api/auth/bayar',
                     data : {
                         id : self.id,
                         dibayar : 'dibayar',
@@ -431,26 +448,21 @@
                                 text: "Transaksi anda berhasil",
                                 type: 'success',
                                 showCancelButton: false,
-                                cancel: false,
-                                close: false,
                                 confirmButtonColor: '#3085d6',
                                 cancelButtonColor: '#d33',
                                 // cancelButtonText: 'Kembali',
                                 confirmButtonText: 'Lanjutkan !'
                             }).then((result) => {
 
-                                $("#navbar").hide();
-                                $("#appCon").hide();
-                                $("#content-im").hide();
-                                $("#printPage").show();
+                                
 
                                 setTimeout(function(){
-                                    window.print()
-                                    $("#navbar").show();
-                                    $("#appCon").show();
-                                    $("#content-im").show();
-                                    $("#printPage").hide();
-                                },1000);
+                                window.print()
+                                },2000);
+                                document.title = "CNC Laundry"
+
+                                
+                                    
                                 // alert("oke")
                                 
                                 self.code = 0;

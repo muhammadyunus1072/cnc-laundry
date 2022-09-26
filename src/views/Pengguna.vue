@@ -27,7 +27,7 @@
 
                         <div class="form-group col-md-8 mx-auto">
                                 <!-- <label for="">Nama</label> -->
-                            <input type="text" name="nama" id="name" class="form-control form-block text-center"  placeholder="Nama" aria-describedby="helpId">
+                            <input type="text" name="name" id="name" class="form-control form-block text-center"  placeholder="Nama" aria-describedby="helpId">
                                 <!-- <small id="helpId" class="text-muted">Help text</small> -->
                         </div>
                         <div class="form-group col-md-8 mx-auto mt-3">
@@ -77,31 +77,33 @@
       </div>
     </div>
     <!-- <h1>@{{ searchOut }}</h1> -->
-      <table class="table table-hover mt-5 table-lg table-responsive" id="tablePen">
-        <thead>
-          <tr>
-            <th>#</th>
-            <th>Nama</th>
-            <th width="300">Email</th>
-            <th>Role</th>
-            <th colspan="2" style="text-align:center;">Opsi</th>
-          </tr>
-        </thead>
-        <tbody v-for=" (data, index) in pengguna">
-          <tr>
-            <td> {{ index+1 }}</td>
-            <td> {{ data.name }}</td>
-            <td> {{ data.email }}</td>
-            <td> {{ data.role.role }}</td>
-            <td> 
-              <button class="btn btn-warning font-weight-bold btnUbahPen" :idPen="data.id" :name="data.name"  :role_id="data.role_id" :email="data.email" data-bs-toggle="modal" data-bs-target="#modalPen" v-on:click="opsi('ubah', data.id)">Ubah</button>
-            </td>
-            <td>
-              <button class="btn btn-danger font-weight-bold btnHapusPen" v-on:click="hapusPen(data.id)">Hapus</button>
-            </td>
-          </tr>         
-        </tbody>
-      </table>
+    <div class="table-responsive">
+        <table class="table table-hover mt-5 table-lg" id="tablePen">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Nama</th>
+              <th width="300">Email</th>
+              <th>Role</th>
+              <th colspan="2" style="text-align:center;">Opsi</th>
+            </tr>
+          </thead>
+          <tbody v-for=" (data, index) in pengguna">
+            <tr>
+              <td> {{ index+1 }}</td>
+              <td> {{ data.name }}</td>
+              <td> {{ data.email }}</td>
+              <td> {{ data.role.role }}</td>
+              <td> 
+                <button class="btn btn-warning font-weight-bold btnUbahPen" :idPen="data.id" :name="data.name"  :role_id="data.role_id" :email="data.email" data-bs-toggle="modal" data-bs-target="#modalPen" v-on:click="opsi('ubah', data.id)">Ubah</button>
+              </td>
+              <td>
+                <button class="btn btn-danger font-weight-bold btnHapusPen" v-on:click="hapusPen(data.id)">Hapus</button>
+              </td>
+            </tr>         
+          </tbody>
+        </table>
+    </div>
 </div>
 
 
@@ -201,10 +203,13 @@
 
 <script>
     import Navbar from '../Components/Navbar.vue'
+    import router from '../router';
+    // import DataTable from 'datatables.net-vue3'
 
     export default{
         components: {
             Navbar,
+            // DataTable
         },
         data: function(){
             return{
@@ -217,7 +222,9 @@
                 pRole: '',
                 pPassword: "",
                 idPen: "",
-                role: ""
+                role: "",
+        
+    
             }
         },
         methods: {
@@ -236,7 +243,7 @@
                     if (result.value) {
                         axios({
                             method: 'delete',
-                            url: 'http://localhost:8001/api/auth/user/'+id,
+                            url: 'https://apilaundry.arashiyunus.com/api/auth/user/'+id,
                             headers: {
                             'Authorization': `Bearer ${self.access_token}` 
                             }
@@ -266,23 +273,34 @@
                 var self = this;
                 self.access_token = localStorage.getItem('access_token');
 
+                // if(self.access_token)
+
                 // console.log(access_token)
-                axios.get('http://localhost:8001/api/auth/getAllUser',{
-                        headers: {
-                            'Authorization': `Bearer ${self.access_token}` 
-                        }
-                    })
-                .then(function(response){
-                    var res = response.data;
-                    self.role = res.role;
-                    self.pengguna = res.list;
-                    // self.outlet = res.outlet;
-                    // self.role = res.role;
-                })
+                
+
+                    axios.get('https://apilaundry.arashiyunus.com/api/auth/getAllUser',{
+                    // axios.get('http://localhost:8001/api/auth/getAllUser',{
+                            headers: {
+                                'Authorization': `Bearer ${self.access_token}` 
+                            }
+                        })
+                    .then(function(response){
+                        // console.log(response.data.list)
+                       
+                            // console.log(response)
+                        var res = response.data;
+                        self.role = res.role;
+                        
+                        
+                        self.pengguna = response.data.list;
+                        // self.outlet = res.outlet;
+                        // self.role = res.role;
+                    }, { withCredentials: true })
+                
             },
              searchingPen: function(a){
                 var self = this;
-                axios.post('http://localhost:8001/api/auth/searchPen/',{
+                axios.post('https://apilaundry.arashiyunus.com/api/auth/searchPen/',{
                     // id_outlet : $('#idOutlet').val(),
                     param : a
                 },{
@@ -297,6 +315,7 @@
                 })
             },
             opsi: function(a, b){
+                // alert("option neh")
                 var self = this;
                 // alert($("#name").val())
                         $("#name").val("");
@@ -320,15 +339,16 @@
                         role_id : $("#role_id").val(),
                     }
                }else if(self.role=='2'){
-                    data = {
-                        name : $("#name").val(),
+                   data = {
+                       name : $("#name").val(),
                         email : $("#email").val(),
                         role_id : '',
                     }
                }
+                        // console.log(self.role)
                 axios({
                     method: "put",
-                    url: "http://localhost:8001/api/auth/user/"+self.idPen,
+                    url: "https://apilaundry.arashiyunus.com/api/auth/user/"+self.idPen,
                     data,           
                     headers: {
                             'Authorization': `Bearer ${self.access_token}` 
@@ -350,8 +370,6 @@
                                 text: "Data berhasil diubah!",
                                 type: 'success',
                                 showCancelButton: false,
-                                cancel: false,
-                                close: false,
                                 confirmButtonColor: '#3085d6',
                                 cancelButtonColor: '#d33',
                                 // cancelButtonText: 'Kembali',
@@ -395,7 +413,7 @@
             //    console.log(data)
                 axios({
                     method: "post",
-                    url: "http://localhost:8001/api/auth/user",
+                    url: "https://apilaundry.arashiyunus.com/api/auth/user",
                     data,
                         headers: {
                             'Authorization': `Bearer ${self.access_token}` 
@@ -404,7 +422,7 @@
                 })
                 .then(function(response){
                     var res = response.data;
-                    // console.log(response)
+                    console.log(response)
                     if(res.validate){
                         if(res.status){
                             $("#modalPen").modal('hide')
@@ -447,7 +465,7 @@
                             $("#modalPen").modal('hide')
                         }                       
                     }else{
-                        swal('Peringatan !', res.error[Object.keys(res.error)[0]][0], 'warning')
+                        swal('Peringatan !', response.error[Object.keys(response.error)[0]][0], 'warning')
                         $("#modalPen").modal('hide')
                     }
 
@@ -459,6 +477,7 @@
         mounted(){
             var self = this;
             self.getPenggunaAll()
+            
         }
     }
 </script>

@@ -68,38 +68,43 @@
       </div>
     </div>
     <!-- <h1>@{{ searchOut }}</h1> -->
-      <table class="table table-hover mt-5 table-lg table-responsive" id="tableOutlet">
-        <thead>
-          <tr>
-            <th>#</th>
-            <th>Nama</th>
-            <th width="750">Alamat</th>
-            <th>No Telp</th>
-            <th width="200" colspan="2" style="text-align:center;">Opsi</th>
-            <!-- <th></th> -->
-          </tr>
-        </thead>
-        <tbody v-for = " (data, index) in list">
-          <tr>
-            <td> {{ index+1 }}</td>
-            <td> {{ data.nama }}</td>
-            <td> {{ data.alamat }}</td>
-            <td> {{ data.tlp }}</td>
-            <td> 
-              <button class="btn btn-warning font-weight-bold btnUbahOut" :nama="data.nama" :alamat="data.alamat" :tlp="data.tlp" :idOut="data.id" data-bs-toggle="modal" data-bs-target="#modalOut" v-on:click="opsi('ubah', data.id)">Ubah</button>
-            </td>
-            <td>
-              <button class="btn btn-danger font-weight-bold" :idOut="data.id" @click="hapusOutlet(data.id)">Hapus</button>
-            </td>
-          </tr>         
-        </tbody>
-      </table>
+    <div class="table-responsive">
+        <table class="table table-hover mt-5 table-lg" id="tableOutlet">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Nama</th>
+              <th width="750">Alamat</th>
+              <th>No Telp</th>
+              <th width="200" colspan="2" style="text-align:center;">Opsi</th>
+              <!-- <th></th> -->
+            </tr>
+          </thead>
+          <tbody v-for = " (data, index) in list">
+            <tr>
+              <td> {{ index+1 }}</td>
+              <td> {{ data.nama }}</td>
+              <td> {{ data.alamat }}</td>
+              <td> {{ data.tlp }}</td>
+              <td> 
+                <button class="btn btn-warning font-weight-bold btnUbahOut" :nama="data.nama" :alamat="data.alamat" :tlp="data.tlp" :idOut="data.id" data-bs-toggle="modal" data-bs-target="#modalOut" v-on:click="opsi('ubah', data.id)">Ubah</button>
+              </td>
+              <td>
+                <button class="btn btn-danger font-weight-bold" :idOut="data.id" @click="hapusOutlet(data.id)">Hapus</button>
+              </td>
+            </tr>         
+          </tbody>
+        </table>
+    </div>
 <!-- {{ list }} -->
 </template>
 <script>
     import { reactive, ref } from 'vue';
     import Navbar from '../Components/Navbar.vue'
     import axios from 'axios'
+    // import router from '../router/index';
+    import router from '../router';
+
 
     export default{
         components: {
@@ -131,7 +136,7 @@
                     if (result.value) {
                         axios({
                             method: 'delete',
-                            url: 'http://localhost:8001/api/auth/outlet/'+a,
+                            url: 'https://apilaundry.arashiyunus.com/api/auth/outlet/'+a,
                             headers: {
                                 'Authorization': `Bearer ${self.access_token}` 
                             }                    
@@ -161,7 +166,7 @@
                 var self = this;
                 const access_token = localStorage.getItem('access_token');
                 // console.log(access_token);
-                axios.post('http://localhost:8001/api/auth/searchOut/',{param: a},{
+                axios.post('https://apilaundry.arashiyunus.com/api/auth/searchOut/',{param: a},{
                     headers: {
                                 'Authorization': `Bearer ${access_token}` 
                             }
@@ -182,7 +187,7 @@
                 self.access_token = localStorage.getItem('access_token');
                 // if(store(this.access_token) == "verified"){
                 axios.get(
-                    'http://127.0.0.1:8001/api/auth/outlet',{
+                    'https://apilaundry.arashiyunus.com/api/auth/outlet',{
                         headers: {
                             'Authorization': `Bearer ${self.access_token}` 
                         }
@@ -190,8 +195,13 @@
                 )
                 .then((res)=>{
                     self.list = res.data.list
+                    // console.log(res)
                 }, { withCredentials: true })
                 .catch((e)=>{
+                    // console.log(e)
+                     router.push({
+                        name: 'index'
+                    })
                     // validation.value = e.response.data
                 });
             // }
@@ -201,7 +211,7 @@
                 var self = this; 
                 if(self.option == "tambah"){
                     // console.log(self.option)
-                    axios.post('http://localhost:8001/api/auth/outlet',{
+                    axios.post('https://apilaundry.arashiyunus.com/api/auth/outlet',{
                         nama: $("#nama").val(),
                         alamat: $("#alamat").val(),
                         tlp: $("#tlp").val()
@@ -231,7 +241,7 @@
                     })
                 }else if(self.option == "ubah"){
                     // console.log(self.option)
-                    axios.put('http://localhost:8001/api/auth/outlet/'+self.idOutlet,{
+                    axios.put('https://apilaundry.arashiyunus.com/api/auth/outlet/'+self.idOutlet,{
                         nama: $("#nama").val(),
                         alamat: $("#alamat").val(),
                         tlp: $("#tlp").val()
@@ -262,7 +272,8 @@
                 }
             }
         },
-        mounted(){
+        created(){
+            // alert("oke")
             this.getOutletAll()
             // 
         },

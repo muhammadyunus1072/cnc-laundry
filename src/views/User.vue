@@ -22,7 +22,7 @@
             this.access_token = localStorage.getItem('access_token');
             // if(store(this.access_token) == "verified"){
                 axios.get(
-                    'http://127.0.0.1:8001/api/auth/user-profile',{
+                    'https://apilaundry.arashiyunus.com/api/auth/user-profile',{
                         headers: {
                             'Authorization': `Bearer ${this.access_token}` 
                         }

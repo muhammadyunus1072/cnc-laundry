@@ -1,5 +1,5 @@
 <template >
-    <div class="alert alert-primary w-100 fadeDownNav" role="alert" id="navbar">
+    <div class="alert alert-primary w-100" role="alert" id="navbar">
 
 
 
@@ -14,17 +14,18 @@
           
                 <ul class="navbar-nav d-flex justify-content-evenly float-end w-100 ml-3">
                     <!-- //- @if( $role == '1') -->
-                    <li v-if="role == '1' " class="nav-item my-3 mt-3 ">
+                    
+                    <li v-if="(role == 'admin') && isLoggedIn" class="nav-item my-3 mt-3 ">
                         <a href="outlet">
                             <router-link :to="{name:'outlet'}" type="button" class="button btn fs-6 btn-primary fw-semibold">Outlet</router-link>
                         </a>
                     </li>   
-                    <li v-if="role == '1' " class="nav-item my-3 mt-3 ">
+                    <li v-if="(role == 'admin') && isLoggedIn" class="nav-item my-3 mt-3 ">
                         <a href="paket">
                             <router-link :to="{name:'paket'}" type="button" class="button btn fs-6 btn-primary fw-semibold">Paket</router-link>
                         </a>
                     </li>   
-                    <li v-if="role == '1' || role == '2'" class="nav-item my-3 mt-3 ">
+                    <li v-if="(role == 'admin' || role == 'kasir') && isLoggedIn" class="nav-item my-3 mt-3 ">
                         <a href="pengguna">
                             <router-link :to="{name:'pengguna'}" type="button" class="button btn fs-6 btn-primary fw-semibold">Pengguna</router-link>
                         </a>
@@ -32,7 +33,7 @@
                     <!-- //- @endif
 
                     //- @if( $role == '1' || $role == '2' ) -->
-                    <li v-if="role == '1' || role == '2' " class="nav-item my-3 mt-3">
+                    <li v-if=" (role == 'kasir') && isLoggedIn" class="nav-item my-3 mt-3">
                         <a href="transaksi">
                             <router-link type="button" :to="{name:'transaksi'}" class="button btn fs-6 btn-primary fw-semibold">Transaksi</router-link>
                         </a>
@@ -40,12 +41,12 @@
                     <!-- //- @endif
 
                     //- @if( $role == '1' || $role == '2' || $role == '3') -->
-                    <li v-if="role == '1' || role == '2' " class="nav-item my-3 mt-3 ">
+                    <li v-if="(role == 'admin' || role == 'kasir') && isLoggedIn" class="nav-item my-3 mt-3 ">
                         <a href="laporan">
                             <router-link type="button" :to="{name:'laporan'}" class="button btn fs-6 btn-primary fw-semibold">Laporan</router-link>
                         </a>
                     </li>   
-                    <li v-if="role == '1' || role == '2' " class="nav-item my-3 mt-3 ">
+                    <li v-if=" (role == 'kasir') && isLoggedIn" class="nav-item my-3 mt-3 ">
                         <a href="payment">
                             <router-link type="button" :to="{name:'payment'}" class="button btn fs-6 btn-primary fw-semibold">Payment</router-link>
                         </a>
@@ -53,16 +54,28 @@
                    
                     <!-- //- @endif
                     //- @if( $role == '4') -->
-                    <li v-if="role == '3'" class="nav-item my-3 mt-3 ">
+                    <li v-if="(role == 'pelanggan') && isLoggedIn" class="nav-item my-3 mt-3 ">
                         <a href="history">
                             <router-link type="button" :to="{name:'history'}" class="button btn fs-6 btn-primary fw-semibold">History</router-link>
                         </a>
                     </li>   
+                    <li class="nav-item my-3 mt-3">
+                        <div v-if="isLoggedIn">
+                            <li class="nav-item">
+                                <button type="button" class="btn btn-outline-danger my-2 my-sm-0 fw-semibold h2" v-on:click="logout">Logout</button>
+                            </li>
+                        </div>
+                        <div v-if="!isLoggedIn">
+                            <li class="nav-item d-inline my-3">
+                            <router-link :to="{name: 'index'}" type="button" class="btn btn-outline-primary my-2 my-sm-0 fw-semibold h2">Login</router-link>
+                            </li>
+                            <li class="nav-item d-inline my-3">
+                            <router-link :to="{name: 'register'}" type="button" class="btn btn-outline-info my-2 my-sm-0 fw-semibold h2">Register</router-link>
+                            </li>
+                        </div>
+                    </li>
                     <!-- //- @endif -->
 
-                        <li  v-if="role == '1' || role == '2' || role == '3'" class="nav-item my-3 mt-3">
-                            <button type="button" class="btn btn-outline-danger my-2 my-sm-0 fw-semibold h2" v-on:click="logout">Logout</button>
-                        </li>
                 </ul>
                 
         </div>
@@ -74,41 +87,32 @@
     import { reactive } from 'vue';
     import axios from 'axios'
     import router from '../router/index';
-    import * as Verify from '../router/getRole'   
+    // import * as Verify from '../router/getRole'   
     export default{
         name: "Navbar",
         data(){
             return{
                 access_token : '',
-                role : ''
+                role : '',
+                user : null,
+                isLoggedIn : false
             }
         },
-        created(){
-            this.access_token = localStorage.getItem('access_token');
+        mounted(){
+            // alert("oke")
+            this.setUser();
+            // this.access_token = localStorage.getItem('access_token');
             // if(store(this.access_token) == "verified"){
-                axios.get(
-                    'http://127.0.0.1:8001/api/auth/getRole',{
-                        headers: {
-                            'Authorization': `Bearer ${this.access_token}` 
-                        }
-                    }
-                )
-                .then((res)=>{
-                    
-                    this.role = res.data
-                    // if(res.data.message == 'verified'){
-                        // return "verified";
-                    // }
-                })
-                .catch((e)=>{
-                    // localStorage.access_token = res.data.access_token 
-                    router.push({
-                        name: 'index'
-                    })
-
-                });
+                
         },
         methods: {
+            setUser() {
+                this.user = JSON.parse(localStorage.getItem('user'))
+                this.isLoggedIn = localStorage.getItem('access_token') != null
+                let user = JSON.parse(localStorage.getItem('user'))
+                // console.log(user.role.role);
+                this.role = user.role.role
+            },
             logout: function(){
                 swal.fire({
                     title: "Peringatan !",
@@ -121,7 +125,32 @@
                     confirmButtonText: "Ya, Keluar!"
                 }).then(result => {
                     if (result.value){
-                        window.location.assign('/logout');
+                        // localStorage.removeItem('token')
+                        // localStorage.removeItem('user')
+                        this.setUser()
+                        // this.$router.push('/')
+                        const data = "";
+                        axios.post(
+                            'https://apilaundry.arashiyunus.com/api/auth/logout',{
+                                data
+                            },{
+                                headers: {
+                                    'Authorization': `Bearer ${localStorage.getItem('access_token')}` 
+                                }
+                            }
+                        )
+                        .then((res)=>{
+                            
+                        }, { withCredentials: true })
+                        .catch((e)=>{
+                            // validation.value = e.response.data
+                        });
+                            localStorage.removeItem('access_token')
+                            localStorage.removeItem('user')
+                            router.push({
+                                name: 'index'
+                            })
+                        // window.location.assign('/logout');
                     }
                 })
             }

@@ -76,7 +76,8 @@
       </div>
     </div>
     <!-- <h1>@{{ searchOut }}</h1> -->
-      <table class="table table-hover mt-5 table-lg table-responsive" id="tableOutlet">
+    <div class="table-responsive">
+      <table class="table table-hover mt-5 table-lg" id="tableOutlet">
         <thead>
           <tr>
             <th>#</th>
@@ -106,11 +107,13 @@
           </tr>         
         </tbody>
       </table>
+    </div>
 </div>
 </template>
 
 <script>
-    import Navbar from '../Components/Navbar.vue'
+    import Navbar from '../Components/Navbar.vue';
+    import router from '../router';
 
     export default{
         components: {
@@ -144,7 +147,7 @@
                 if (result.value) {
                     axios({
                         method: 'delete',
-                        url: 'http://localhost:8001/api/auth/paket/'+a,
+                        url: 'https://apilaundry.arashiyunus.com/api/auth/paket/'+a,
                         headers: {
                             'Authorization': `Bearer ${self.access_token}` 
                         }
@@ -172,7 +175,7 @@
           getPaketAll: function () {
             var self = this
             self.access_token = localStorage.getItem("access_token");
-            axios.get('http://localhost:8001/api/auth/paket',{
+            axios.get('https://apilaundry.arashiyunus.com/api/auth/paket',{
                         headers: {
                             'Authorization': `Bearer ${self.access_token}` 
                         }
@@ -202,12 +205,19 @@
                         }
                     }
                  }                  
-            })
+            }, { withCredentials: true })
+                .catch((e)=>{
+                    // console.log(e)
+                     router.push({
+                        name: 'index'
+                    })
+                    // validation.value = e.response.data
+                });
           },
           searchingPak: function (a) {
             var self = this;
             var access_token = localStorage.getItem('access_token')
-            axios.post('http://localhost:8001/api/auth/searchPak/',{param: a},{
+            axios.post('https://apilaundry.arashiyunus.com/api/auth/searchPak/',{param: a},{
                     headers: {
                                 'Authorization': `Bearer ${access_token}` 
                             }
@@ -225,7 +235,7 @@
            simpanPaket: function () {
             var self = this;
             if(self.option == "tambah"){
-                axios.post("http://localhost:8001/api/auth/paket",{
+                axios.post("https://apilaundry.arashiyunus.com/api/auth/paket",{
                     // id_outlet : $('#idOutlet').val(),
                     jenis : $('#jenis').val(),
                     nama_paket : $('#nama_paket').val(),
@@ -253,7 +263,7 @@
                     }
                 })
             }else if(self.option == "ubah"){
-                axios.put('http://localhost:8001/api/auth/paket/'+self.idPaket,{
+                axios.put('https://apilaundry.arashiyunus.com/api/auth/paket/'+self.idPaket,{
                     // id_outlet : $('#idOutlet').val(),
                     jenis : $('#jenis').val(),
                     nama_paket : $('#nama_paket').val(),

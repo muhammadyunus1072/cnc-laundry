@@ -35,15 +35,6 @@
     import { useRouter } from 'vue-router';
     import axios from 'axios';
     import router from '../router';
-    import * as Verify from '../router/verified'   
-    const v = await Verify.store(localStorage.getItem('access_token'));
-    // Vue.use(Vuex);
-
-    if(v == "verified"){
-         router.push({
-            name: 'dashboard'
-        })
-    }
     
     export default({
         name: 'loginVerify',
@@ -60,22 +51,42 @@
 
             const store = async () => {
                 axios.post(
-                    'http://127.0.0.1:8001/api/auth/login',
-                    data, {
+                    'https://apilaundry.arashiyunus.com/api/auth/login',
+                    // 'http://localhost:8001/api/auth/login',
+                    data, 
+                    {
                     headers: {
                         'Accept': 'application/json',
+                        // 'Content-Type': 'application/x-www-form-urlencoded',
                         'Content-Type': 'application/json',
+                        // 'Accept-Encoding': 'gzip, deflate, br',
+
                         // 'Content-Length': '268'
-                    },}
+                    },
+                    }
                     
                 )
                 .then((res)=>{
-                    // console.log(res.data.user)
-                    localStorage.role = res.data.user.id_role
+                    // console.log(res.data.token.original.access_token)
+                    console.log(res);
+                    localStorage.setItem('user', JSON.stringify(res.data.user));
                     // this.props.role = res.data.user.id_role
 
                     // console.log(this.props.role)
-                    localStorage.access_token = res.data.access_token 
+                    localStorage.setItem('access_token', res.data.token.original.access_token);
+                    
+                     let loginType = res.data.user.role.role
+                    if (loginType === 'pelanggan') {
+                    router.push('dashboard')
+                    } else if (loginType === 'kasir') {
+                    router.push('dashboard')
+                    } else if (loginType === 'admin') {
+                    router.push('dashboard')
+                    } else {
+                    router.push('home')
+                    }
+                    this.$emit('loggedIn')
+
                     router.push({
                         name: 'dashboard'
                     })

@@ -1,8 +1,9 @@
  import axios from 'axios';
  import router from './';
- export const store =  (data) => 
+ export const store = (data) => 
     axios.get(
-        'http://127.0.0.1:8001/api/auth/verify',{
+        'https://apilaundry.arashiyunus.com/api/auth/verify',{
+        // 'https://cnclaundry.000webhostapp.com/api/auth/verify',{
             headers: {
                 'Authorization': `Bearer ${data}` 
             }
@@ -11,14 +12,19 @@
     .then((res)=>{
         // return "data";
         if(res.data.message == 'verified'){
-            return "verified";
+            alert("sudah")
+            // return "verified";
         }
+        else(
+            alert("belum")
+        )
     })
     .catch((e)=>{
         // localStorage.access_token = res.data.access_token 
-        router.push({
-            name: 'index'
-        })
+        if(e.response.status === 401){
+            // alert("401 nih")
+            // return "apasih"
+        }
 
     });
 function verified(data){

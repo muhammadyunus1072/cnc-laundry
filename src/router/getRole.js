@@ -2,7 +2,7 @@
  import router from './index';
  export const getRole =  (data) => 
     axios.get(
-        'http://127.0.0.1:8001/api/auth/getRole',{
+        'https://cnclaundry.000webhostapp.com/api/auth/getRole',{
             headers: {
                 'Authorization': `Bearer ${data}` 
             }
