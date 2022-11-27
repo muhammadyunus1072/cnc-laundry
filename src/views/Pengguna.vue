@@ -17,7 +17,7 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <img src="/img/logo.png" width="150" height="60" alt="">
-                    <h4 class="card-title font-weight-bold text-center h1 text-primary" style="margin-left:19%;">Pengguna</h4>   
+                    <h4 class="card-title font-weight-bold text-center h1 text-primary mx-auto">Pengguna</h4>   
                     <button type="button" class="btn btn-close btn-danger" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
               
@@ -59,8 +59,8 @@
             <!-- <div class="modal-footer"> -->
                     <!-- <button type="button" class="btn btn-secondary" style="margin-left:1px;" data-dismiss="modal">Close</button> -->
                     <!-- <button type="button" class="btn btn-primary">Save</button> -->
-                <div class="form-group col-md-8 mx-auto pb-3 my-4" >
-                    <button class="btn btn-block btn-primary font-weight-bold w-75" style="margin-left:12.5%" id="btnSimpanPen" @click="simpanPengguna">Simpan</button>
+                <div class="form-group col-8 mx-auto pb-3 my-4 d-flex justify-content-center" >
+                    <button class="btn btn-primary font-weight-bold w-75" id="btnSimpanPen" @click="simpanPengguna">Simpan</button>
                 </div>
             <!-- </div> -->
         </div>
@@ -271,12 +271,7 @@
             getPenggunaAll: function(){
                 
                 var self = this;
-                self.access_token = localStorage.getItem('access_token');
-
-                // if(self.access_token)
-
-                // console.log(access_token)
-                
+                self.access_token = localStorage.getItem('access_token');                
 
                     axios.get('https://apilaundry.arashiyunus.com/api/auth/getAllUser',{
                     // axios.get('http://localhost:8001/api/auth/getAllUser',{
@@ -285,32 +280,29 @@
                             }
                         })
                     .then(function(response){
-                        // console.log(response.data.list)
-                       
-                            // console.log(response)
                         var res = response.data;
                         self.role = res.role;
                         
                         
                         self.pengguna = response.data.list;
-                        // self.outlet = res.outlet;
-                        // self.role = res.role;
                     }, { withCredentials: true })
                 
             },
              searchingPen: function(a){
                 var self = this;
-                axios.post('https://apilaundry.arashiyunus.com/api/auth/searchPen/',{
-                    // id_outlet : $('#idOutlet').val(),
-                    param : a
-                },{
-                        headers: {
-                            'Authorization': `Bearer ${self.access_token}` 
-                        }
-                    })
+                const data = new FormData()
+                data.append('param', a)
+                axios({
+                    method : 'POST',
+                    url : 'https://apilaundry.arashiyunus.com/api/auth/searchPen',
+                    data : data,
+                    headers: {
+                            'Authorization': `Bearer ${self.access_token}` ,
+                            'Content-Type' : 'application/x-www-form-urlencoded'
+                        }   
+                })
                 .then( function(response){
                     var res = response.data;
-                    // console.log(res)
                     self.pengguna =res.list;
                 })
             },
@@ -345,7 +337,6 @@
                         role_id : '',
                     }
                }
-                        // console.log(self.role)
                 axios({
                     method: "put",
                     url: "https://apilaundry.arashiyunus.com/api/auth/user/"+self.idPen,
@@ -360,9 +351,7 @@
                     if(res.validate){
                         
                         if(res.status){
-                            // swal('Sukses !', 'Data berhasil diubah', 'success')
                             $("#modalPen").modal('hide')
-                            // console.log(res);
                             self.getPenggunaAll();
 
                             Swal.fire({
@@ -410,7 +399,6 @@
                         role_id : '3',
                     }
                }
-            //    console.log(data)
                 axios({
                     method: "post",
                     url: "https://apilaundry.arashiyunus.com/api/auth/user",
@@ -422,7 +410,6 @@
                 })
                 .then(function(response){
                     var res = response.data;
-                    console.log(response)
                     if(res.validate){
                         if(res.status){
                             $("#modalPen").modal('hide')

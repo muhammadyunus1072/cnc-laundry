@@ -110,7 +110,6 @@
                 this.user = JSON.parse(localStorage.getItem('user'))
                 this.isLoggedIn = localStorage.getItem('access_token') != null
                 let user = JSON.parse(localStorage.getItem('user'))
-                // console.log(user.role.role);
                 this.role = user.role.role
             },
             logout: function(){

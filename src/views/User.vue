@@ -32,11 +32,7 @@
                     this.data = res.data
                 }, { withCredentials: true })
                 .catch((e)=>{
-                    // validation.value = e.response.data
                 });
-            // }else{
-            //     console.log("unverified");
-            // }
         }
     }
 </script>

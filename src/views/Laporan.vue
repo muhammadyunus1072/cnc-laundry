@@ -319,13 +319,11 @@
                 })
                 .then(function(response){
                     var res = response.data;
-                    // console.log(response)
                     self.role = res.role;
                     self.outlet = res.outlet;
                     
                 }, { withCredentials: true })
                 .catch((e)=>{
-                    // console.log(e)
                      router.push({
                         name: 'index'
                     })
@@ -355,7 +353,6 @@
                     })
                     .then(function(response){
                         var res = response.data;
-                        // console.log(res)
                         self.list = res.list;
                         self.kodel = true;
                     })
@@ -376,7 +373,6 @@
                         })
                         .then(function(response){
                             var res = response.data;
-                            // console.log(res)
                             self.list = res.list;
                             self.kodel = true;
                         })
@@ -394,7 +390,6 @@
                         })
                         .then(function(response){
                             var res = response.data;
-                            // console.log(res)
                             self.list = res.list;
                             self.kodel = true;
                         })
@@ -417,7 +412,6 @@
                     })
                     .then(function(response){
                         var res = response.data;
-                        // console.log(res)
                         self.list = res.list;
                         self.kodel = true;
                     })
@@ -436,7 +430,6 @@
                     })
                     .then(function(response){
                         var res = response.data;
-                        // console.log(res)
                         self.list = res.list;
                         self.kodel = true;
                     })
@@ -456,7 +449,7 @@
                     })
                     .then(function(response){
                         var res = response.data;
-                        // console.log(res)
+                        
                         self.list = res.list;
                         self.kodel = true;
                     })
@@ -475,7 +468,7 @@
                     })
                     .then(function(response){
                         var res = response.data;
-                        // console.log(res)
+                        
                         self.list = res.list;
                         self.kodel = true;
                     })
@@ -547,7 +540,7 @@
                     })
                     .then(function(response){
                         var res = response.data;
-                        // console.log(res)
+                        
                         self.list = res.list;
                         self.kodel = true;
                     })

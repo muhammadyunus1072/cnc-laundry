@@ -183,7 +183,6 @@
             .then( function(response){
                 // alert("oke")
                 var res = response.data;
-                // console.log(res)
                 self.outlet = res.outlet;
                 self.jenis = res.jenis;
                 self.paket = res.paket;
@@ -192,13 +191,8 @@
                 var exists = 0;
                 self.detOutlet.length = 0;
                 for(var a = 0; a < lp; a++){
-                  // console.log(self.paket)
-                    // console.log("pak = "+self.paket[a].outlet_id)
-                    // console.log("pak = "+self.paket[a])
                     var lo = self.outlet.length;
-                    // console.log("pak = "+lo)
                     for(var b = 0; b < lo; b++){
-                        // console.log("out = "+self.outlet[b].id)
                         if(self.paket[a].outlet_id == self.outlet[b].id){
                             var nama = self.outlet[b].nama.concat(", ",self.outlet[b].alamat);
                            self.detOutlet.push(nama)
@@ -207,7 +201,6 @@
                  }                  
             }, { withCredentials: true })
                 .catch((e)=>{
-                    // console.log(e)
                      router.push({
                         name: 'index'
                     })
@@ -217,11 +210,17 @@
           searchingPak: function (a) {
             var self = this;
             var access_token = localStorage.getItem('access_token')
-            axios.post('https://apilaundry.arashiyunus.com/api/auth/searchPak/',{param: a},{
-                    headers: {
-                                'Authorization': `Bearer ${access_token}` 
-                            }
-                })
+            const data = new FormData()
+            data.append('param', a)
+            axios({
+                method : 'POST',
+                url : 'https://apilaundry.arashiyunus.com/api/auth/searchPak',
+                data : data,
+                headers: {
+                        'Authorization': `Bearer ${access_token}` ,
+                        'Content-Type' : 'application/x-www-form-urlencoded'
+                    }   
+            })
             .then( function(response){
                 var res = response.data;
                 self.paket =res.paket;
@@ -251,7 +250,6 @@
                         if(res.status){
                             swal('Sukses !', 'Data berhasil disimpan', 'success')
                             $("#modalPak").modal('hide')
-                            // console.log(res)
                            self.getPaketAll();
                         }else{
                             swal('Gagal !', 'Gagal menyimpan data', 'error')
@@ -280,7 +278,6 @@
                         if(res.status){
                             swal('Sukses !', 'Data berhasil diubah', 'success')
                             $("#modalPak").modal('hide')
-                            // console.log(res);
                             self.getPaketAll(); 
                         }else{
                             swal('Gagal !', 'Gagal mengubah data', 'error')

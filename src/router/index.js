@@ -175,7 +175,6 @@ router.beforeEach((to, from, next) => {
             let user = JSON.parse(localStorage.getItem('user'))
             verified('auth')
             let roles = user.role.role
-            // console.log(roles[0]);
             if (to.matched.some(record => record.meta.isUser)) {
                 if (roles.includes('pelanggan')) next()
                 else if (roles === 'kasir') {

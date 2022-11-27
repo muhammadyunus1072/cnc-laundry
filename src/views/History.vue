@@ -80,9 +80,7 @@ import Navbar from '../Components/Navbar.vue'
                     }
                 })
                 .then(function(res){
-                    // console.log(res.data.list)
                     self.list = res.data.list
-                    // console.log(self.list)
                 })
             },
             searchingHis: function(a){
@@ -101,7 +99,6 @@ import Navbar from '../Components/Navbar.vue'
                     }
                 })
                 .then(function(res){
-                    // console.log(res)
                     self.list = res.data.list;
                 })
             }

@@ -164,10 +164,10 @@
                             <td> {{ data.total }}</td>
                             <td> <p class="fw-bold d-inline">{{ data.outlet.nama }}</p>,<p class="d-inline"> {{ data.outlet.alamat }}</p></td>
                             <td> 
-                            <button v-if="data.statusOrder_id === 1" class="btn btn-danger font-weight-bold btnBaru" :idT="data.id" data-bs-toggle="modal" data-bs-target="#modalBaru" v-on:click="kodetran(data.id)">{{ data.status_order.status }}</button>
-                            <button v-if="data.statusOrder_id === 2" class="btn btn-warning font-weight-bold btnProses" :idT="data.id" data-bs-toggle="modal" data-bs-target="#modalProses" v-on:click="kodetran(data.id)">{{ data.status_order.status }}</button>
-                            <button v-if="data.statusOrder_id === 3" class="btn btn-success font-weight-bold btnSelesai" :idT="data.id" data-bs-toggle="modal" data-bs-target="#modalSelesai" v-on:click="kodetran(data.id)">{{ data.status_order.status }}</button>
-                            <button v-if="data.statusOrder_id === 4" class="btn btn-primary font-weight-bold" disabled :idT="data.id">{{ data.status_order.status }}</button>
+                            <button v-if="data.statusOrder_id == 1" class="btn btn-danger font-weight-bold btnBaru" :idT="data.id" data-bs-toggle="modal" data-bs-target="#modalBaru" v-on:click="kodetran(data.id)">{{ data.status_order.status }}</button>
+                            <button v-if="data.statusOrder_id == 2" class="btn btn-warning font-weight-bold btnProses" :idT="data.id" data-bs-toggle="modal" data-bs-target="#modalProses" v-on:click="kodetran(data.id)">{{ data.status_order.status }}</button>
+                            <button v-if="data.statusOrder_id == 3" class="btn btn-success font-weight-bold btnSelesai" :idT="data.id" data-bs-toggle="modal" data-bs-target="#modalSelesai" v-on:click="kodetran(data.id)">{{ data.status_order.status }}</button>
+                            <button v-if="data.statusOrder_id == 4" class="btn btn-primary font-weight-bold" disabled :idT="data.id">{{ data.status_order.status }}</button>
                             </td>
                             <td> 
                             <button v-if="data.statusBayar === 'belum_dibayar'" class="btn btn-danger font-weight-bold btnBelum" :idT="data.id">Belum</button>
@@ -425,10 +425,8 @@
                         }
                     })
                 .then(function(response){
-                    // console.log(response)
                     var res = response.data;
                     self.pelanggan = res.pelanggan;
-                    // self.petugas = res.petugas;
                     self.paket = res.paket;
                     self.outlet = res.outlet;
                     self.transaksi = res.list;
@@ -440,7 +438,6 @@
                     self.kdinvoice = ran.concat("CNC-",date.getDate(),date.getHours(),self.Random(10,"c"))
                 }, { withCredentials: true })
                 .catch((e)=>{
-                    // console.log(e)
                      router.push({
                         name: 'index'
                     })
@@ -454,12 +451,6 @@
                     self.total = "";
                 }else{
                     var kodePa = self.kodePa;
-                    // console.log(self.vqty)
-                
-
-                    // var total = 0;
-
-                    // var jum = parseInt( self.vqty / 10 );
                 
                     var j = parseInt(self.vqty);
                     if(kodePa == 0){
@@ -472,11 +463,6 @@
                     }
                     
                     if(kodePa >= 0){
-                        // self.dis = (self.harga * jum);
-
-                        // self.pajak = (self.harga * j) * 10 / 100;
-                                    
-                        // self.total = ( ( self.harga * j ) - self.dis + self.pajak);
                         self.total = ( ( self.harga * j ));
                     }
                 }
@@ -516,14 +502,22 @@
             },
             searchingTran: function (a) {
                 var self = this;
-                axios.post('https://apilaundry.arashiyunus.com/api/auth/searchTran/',{param: a},{
+                const data = new FormData();
+
+                data.append('param', a)
+
+                axios({
+                    method : "POST",
+                    url : 'https://apilaundry.arashiyunus.com/api/auth/searchTran',
+                    data : data,
                     headers: {
-                            'Authorization': `Bearer ${self.access_token}` 
+                            'Authorization': `Bearer ${self.access_token}` ,
+                            'Content-Type' : 'application/x-www-form-urlencoded'
                         }
-                    })
+                })
                 .then( function(response){
                     var res = response.data;
-                    // console.log(res)
+                    
                     self.transaksi = res.list;
                 })
             },
@@ -603,8 +597,6 @@
             selesai: function (){
                 var self = this;
                 var le = self.detailTran.length;
-
-                // console.log(self.idPel);
                 var dataTran = {
                     user_id : self.idPel,
                     outlet_id : self.idOut,
@@ -614,8 +606,6 @@
                     statusBayar : "belum_dibayar",
                     detail : self.detailTran
                 };
-                // console.log(dataTran)
-                // alert($("#bataswaktu").val())
                 axios({
                     method : "post",
                     url : "https://apilaundry.arashiyunus.com/api/auth/transaksi",
@@ -702,6 +692,7 @@
             // }
         },
         mounted(){
+            var self = this;
             window.addEventListener('beforeprint', function(){
                 $("#navbar").hide();
                 $("#appTran").hide();
@@ -709,7 +700,6 @@
 
             })
             window.addEventListener('afterprint', function(){
-                
                 $("#navbar").show();
                 // $("#appCon").show();
                 // $("#content-im").show();
@@ -719,8 +709,8 @@
                 $("#appTran").show();
                 $("#printPage").hide();
                 
-                self.qrcodeg.clear()  ;
-                })
+                self.getAll()
+            })
             this.getAll()
         }
     }

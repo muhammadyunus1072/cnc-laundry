@@ -165,14 +165,18 @@
             searchingOut: function (a) {
                 var self = this;
                 const access_token = localStorage.getItem('access_token');
-                // console.log(access_token);
-                axios.post('https://apilaundry.arashiyunus.com/api/auth/searchOut/',{param: a},{
+                const data = new FormData()
+                data.append('param', a)
+                axios({
+                    method : 'POST',
+                    url : 'https://apilaundry.arashiyunus.com/api/auth/searchOut',
+                    data : data,
                     headers: {
-                                'Authorization': `Bearer ${access_token}` 
-                            }
+                            'Authorization': `Bearer ${access_token}` ,
+                            'Content-Type' : 'application/x-www-form-urlencoded'
+                        }   
                 })
                 .then(function(res){
-                    // console.log(res.data)
                     self.list = res.data.list
                 })
             },
@@ -195,10 +199,8 @@
                 )
                 .then((res)=>{
                     self.list = res.data.list
-                    // console.log(res)
                 }, { withCredentials: true })
                 .catch((e)=>{
-                    // console.log(e)
                      router.push({
                         name: 'index'
                     })
@@ -210,7 +212,6 @@
                 //    alert(this.option)
                 var self = this; 
                 if(self.option == "tambah"){
-                    // console.log(self.option)
                     axios.post('https://apilaundry.arashiyunus.com/api/auth/outlet',{
                         nama: $("#nama").val(),
                         alamat: $("#alamat").val(),
@@ -228,7 +229,6 @@
                             if(res.status){
                                 swal('Sukses !', 'Data berhasil disimpan', 'success')
                                 $("#modalOut").modal('hide')
-                                console.log(res)
                                 self.getOutletAll();
                             }else{
                                 swal('Gagal !', 'Gagal menyimpan data', 'error')

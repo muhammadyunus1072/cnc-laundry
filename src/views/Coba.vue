@@ -91,7 +91,7 @@ export default {
 
     ]
    }
-    console.log(data)
+    
     // axios({
     //     method : 'get',
     //     url : 'https://api.edamam.com/api/food-database/v2/parser?app_id=5142b005&app_key=429fbc5c81937734d42c34c0240d9903%09&ingr=%20meat&nutrition-type=cooking',
@@ -103,12 +103,12 @@ export default {
         // data : datas
     })
     .then(function(res){
-        console.log(res)
+        
     })
   },
   methods: {
     handleOnFocus() {
-      console.log("Focused");
+      
       this.isFocused = true;
     },
     handlOnBlur() {

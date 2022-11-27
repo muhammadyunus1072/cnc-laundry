@@ -28,7 +28,7 @@
                     }
                 )
                 .then((res)=>{
-                    console.log(res)
+                    
                     if(res.data.message == 'User successfully signed out'){
                         localStorage.removeItem('access_token')
                         router.push({

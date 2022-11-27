@@ -44,7 +44,7 @@
                 <div class="modal-content">
                     <div class="modal-header">
                         <img src="/img/logo.png" width="150" height="60" alt="">
-                        <h4 class="card-title font-weight-bold text-center h1 text-primary" style="margin-left:15%;">Pembayaran</h4>   
+                        <h4 class="card-title font-weight-bold text-center h1 text-primary" style="margin-left:6%;">Pembayaran</h4>   
                         <button type="button" class="btn btn-close btn-danger" data-bs-dismiss="modal"></button>
                     </div>
                     <div class="modal-body" style="width:100%;height:350px;margin-left:0;z-index:0;">
@@ -112,7 +112,7 @@
                                 </td>
                                 <td>
                                     <!-- <p class="fw-bold text-success">{{ bayar }}</p> -->
-                                    <div class="input-group w-75">
+                                    <div class="input-group w-full lg:w-75">
                                         <input type="number" class="form-control" v-model="bayar" :min="0" placeholder="Tunai"  v-on:keyup="tunai">
                                         <div class="input-group-text">
                                             Rupiah
@@ -314,12 +314,7 @@
                 // $("#printPage").hide();
             })
             this.html5QrCode = new Html5Qrcode("qrReader");
-
-        // var html5QrcodeScanner = new Html5QrcodeScanner(
-        //     "qrReader", { fps: 10, qrbox: 300 });
-        // html5QrcodeScanner.render(this.onScanSuccess);
-            
-        this.qrCodeSuccessCallback = (decodedText, decodedResult) => {
+            this.qrCodeSuccessCallback = (decodedText, decodedResult) => {
             /* handle success */
             this.searchingKode(decodedText);
             this.stopScan()
@@ -328,24 +323,8 @@
         this.config = { fps: 10, qrbox: 250 };
 
         this.startScan()
-        // If you want to prefer front camera
-        // this.html5QrCode.start({ facingMode: "user" }, config, qrCodeSuccessCallback);
-
-        // If you want to prefer back camera
-        // html5QrCode.start({ facingMode: "environment" }, config, qrCodeSuccessCallback);
-
-        // Select front camera or fail with `OverconstrainedError`.
-        // html5QrCode.start({ facingMode: { exact: "user"} }, config, qrCodeSuccessCallback);
-
-        // Select back camera or fail with `OverconstrainedError`.
-        // html5QrCode.start({ facingMode: { exact: "environment"} }, config, qrCodeSuccessCallback);
         },
         methods: {
-            //  onScanSuccess: function(decodedText, decodedResult) {
-            //     console.log(`Code scanned = ${decodedText}`, decodedResult);
-            //     html5QrcodeScanner.stop();
-            //     html5QrcodeScanner.clear();
-            // },
             startScan: function(){
                 this.html5QrCode.start({ facingMode: "user" }, this.config, this.qrCodeSuccessCallback);
                 this.scanStatus = true;
@@ -369,12 +348,10 @@
                 )
                 .then(function(response){
                     var res = response.data;
-                    console.log(response)
                     if(res.status){
                         if(res.list[0].statusBayar == "dibayar"){
                             self.code = 2;
                         }else if(res.list[0].statusBayar == "belum_dibayar"){
-                            // console.log(res)
                             self.id = res.list[0].id;
                             self.kode_invoice = res.list[0].kode_invoice;
                             self.outletName = res.list[0].outlet.nama;
@@ -424,7 +401,6 @@
                 })
                 .then(function(response){
                     var res = response.data;
-                    // console.log(res)
                     if(res.validate){
                         if(res.status){
                             self.print = true;

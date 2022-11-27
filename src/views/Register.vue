@@ -4,7 +4,7 @@
             <div class="card text-left " id="appReg">
                 <div class="card-body"> 
                     <div class="card-group row justify-content-center">
-                        <div class="col-8 fadeInDown">
+                        <div class="col-sm-10 col-md-8 fadeInDown">
                             <div id="titleR" style="width:100%;" >
                                 
                             </div>
@@ -18,18 +18,18 @@
                                         <div class="fadeIn first">
                                     </div>                     
                                     <h4 class="card-title font-weight-bold text-center h3 text-primary">Registrasi</h4>
-                                    <div class="form-group my-2 d-flex justify-content-center">
+                                    <div class="form-group my-2 d-flex justify-content-center w-100">
                                         <!-- <label for="">Nama</label> -->
-                                        <input type="text" v-model="data.name" class="text-center"  placeholder="Name" autocomplete="false" aria-describedby="helpId">
+                                        <input type="text" v-model="data.name" class="text-center w-100"  placeholder="Name" autocomplete="false" aria-describedby="helpId">
                                     </div>
                                     
                                     <div class="form-group my-2 d-flex justify-content-center">
-                                        <input type="email" v-model="data.email" class="text-center"  placeholder="Email" autocomplete="false" aria-describedby="helpId">
+                                        <input type="email" v-model="data.email" class="text-center w-100"  placeholder="Email" autocomplete="false" aria-describedby="helpId">
                                         <!-- <textarea class="form-control text-center" id="alamat" aria-label="With textarea" placeholder="Alamat"></textarea> -->
                                     </div>  
                                     <div class="form-group my-2 d-flex justify-content-center">
                                         <!-- <label for="">Nama</label> -->
-                                        <input type="password" v-model="data.password" class="text-center"  placeholder="Password" autocomplete="false" aria-describedby="helpId">
+                                        <input type="password" v-model="data.password" class="text-center w-100"  placeholder="Password" autocomplete="false" aria-describedby="helpId">
                                     </div>
         
                                     <div class="form-group mt-2 w-100 d-flex justify-content-center">
@@ -68,7 +68,6 @@
             const router = useRouter();
 
             const store = async () => {
-                console.log(data)
                 axios.post(
                     'https://apilaundry.arashiyunus.com/api/auth/register',
                     data, 

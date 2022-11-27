@@ -67,12 +67,7 @@
                     
                 )
                 .then((res)=>{
-                    // console.log(res.data.token.original.access_token)
-                    console.log(res);
                     localStorage.setItem('user', JSON.stringify(res.data.user));
-                    // this.props.role = res.data.user.id_role
-
-                    // console.log(this.props.role)
                     localStorage.setItem('access_token', res.data.token.original.access_token);
                     
                      let loginType = res.data.user.role.role
